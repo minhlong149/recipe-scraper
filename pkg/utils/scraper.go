@@ -26,7 +26,7 @@ type Response struct {
 
 var ErrNoRecipeFound = errors.New("no recipe found")
 
-func ScrapeRecipe(url string, recipes chan<- Response) {
+func ScrapeRecipe(url string, recipes chan Response) {
 	res, err := http.Get(url)
 	if err != nil {
 		log.Println(err)
