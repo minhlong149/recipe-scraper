@@ -1,6 +1,6 @@
 # Recipe Scraper
 
-Scraping [Spoonable Recipes](https://www.spoonablerecipes.com/) concurrently with [Go](https://golang.org/).
+Scraping [Spoonable Recipes](https://www.spoonablerecipes.com/) concurrently with [Go](https://golang.org/). The data then will be used to [generate a SQL file](build/recipes.sql) that can be imported to PostgreSQL.
 
 ## Usage
 

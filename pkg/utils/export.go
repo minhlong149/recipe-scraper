@@ -7,14 +7,19 @@ import (
 )
 
 func ExportRecipes(recipes []Recipe) {
-	if _, err := os.Stat("recipes.sql"); err == nil {
-		err := os.Remove("recipes.txt")
+	if _, err := os.Stat("build"); !os.IsNotExist(err) {
+		err := os.RemoveAll("build")
 		if err != nil {
 			log.Fatalln(err)
 		}
 	}
 
-	file, err := os.Create("recipes.sql")
+	err := os.Mkdir("build", 0755)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	file, err := os.Create("build/recipes.sql")
 	if err != nil {
 		log.Fatalln(err)
 	}
