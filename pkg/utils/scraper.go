@@ -1,12 +1,8 @@
-package main
+package utils
 
 import (
-	"encoding/json"
-	"io"
 	"log"
 	"net/http"
-	"os"
-	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -21,7 +17,7 @@ type Recipe struct {
 	Ingredients []Ingredient
 }
 
-func scrapeRecipe(url string) (recipe Recipe, err error) {
+func ScrapeRecipe(url string) (recipe Recipe, err error) {
 	res, err := http.Get(url)
 	if err != nil {
 		log.Println(err)
@@ -57,51 +53,4 @@ func scrapeRecipe(url string) (recipe Recipe, err error) {
 	recipe.Ingredients = recipe.Ingredients[2 : len(recipe.Ingredients)-2]
 
 	return recipe, nil
-}
-
-func main() {
-	urls, err := getUrls("ingredient_data.json")
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	for _, url := range urls {
-		recipe, err := scrapeRecipe(url)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-
-		log.Println(recipe)
-	}
-}
-
-func getUrls(url string) (urls []string, err error) {
-	file, err := os.Open(url)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-
-	data, err := io.ReadAll(file)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-
-	defer file.Close()
-
-	err = json.Unmarshal(data, &urls)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-
-	for i, url := range urls {
-		urls[i] = "https://www.spoonablerecipes.com/common-ingredients-in-" +
-			strings.ReplaceAll(url, " ", "-") + "-dishes"
-	}
-
-	return urls, nil
 }
