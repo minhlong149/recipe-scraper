@@ -13,13 +13,19 @@ func main() {
 		return
 	}
 
+	recipes := make(chan utils.Response)
+
 	for _, url := range urls {
-		recipe, err := utils.ScrapeRecipe(url)
-		if err != nil {
-			log.Println(err)
-			return
+		go utils.ScrapeRecipe(url, recipes)
+	}
+
+	for i := 0; i < len(urls); i++ {
+		response := <-recipes
+		if response.Error != nil {
+			log.Println(response.Error)
+			continue
 		}
 
-		log.Println(recipe)
+		log.Println(response.Recipe)
 	}
 }
